@@ -62,27 +62,27 @@ public class PhotoGlitcherController implements Initializable {
     
     @FXML
     private Button optionOneButton, optionTwoButton, optionThreeButton,
-            optionFourButton, glitchButton, undoButton;
+            optionFourButton, glitchButton, undoButton, redoButton;
     
     @FXML
-    private ComboBox colorPicker;
+    private ComboBox colorPicker, directionPicker;
     
     @FXML
     private Slider slider;
     
     @FXML
-    private Label glitchAmountLabel, colorPickerLabel, targetRangeLabel;
+    private Label glitchAmountLabel, colorPickerLabel, targetRangeLabel, 
+            directionLabel;
     
     @FXML
-    private MenuItem mnuClose, mnuNew;
+    private MenuItem mnuClose, mnuNew, mnuSave, mnuGlitch, mnuUndo;
     
     private Image img1, original;
     private Color c;
     private BufferedImage bufferedImg;
     private ArrayList<BufferedImage> images;
     private int choice, index;
-    private static final double INIT_VALUE = 0;
-    private static final String PERCENT_SIGN = "%";
+    private static final double INIT_VALUE = 50;
     
     /**
      * Initializes the controller class.
@@ -96,10 +96,11 @@ public class PhotoGlitcherController implements Initializable {
         slider.setDisable(true);
         
         glitchAmountLabel.setText("Amount: " + Double.toString(INIT_VALUE) + "%");
-        glitchAmountLabel.textProperty().bind(Bindings.format("Amount: %.1f%s", slider.valueProperty(), PERCENT_SIGN));
+        glitchAmountLabel.textProperty().bind(Bindings.format("Amount: %.1f%s", slider.valueProperty(), "%"));
         glitchAmountLabel.setDisable(true);
         
         colorPicker.getItems().addAll("Red", "Green", "Blue");
+        directionPicker.getItems().addAll("East", "West");
         
         choice = 1;
         optionOneButton.setBorder(new Border(new BorderStroke(Color.BLACK, 
@@ -114,6 +115,7 @@ public class PhotoGlitcherController implements Initializable {
         endSpinner.setValueFactory(endValueFactory);
         
         setupButtons();
+        setupMenuItems();
         
         // create new ArrayList for storing all images
         images = new ArrayList<>();
@@ -130,6 +132,10 @@ public class PhotoGlitcherController implements Initializable {
         targetRangeLabel.setDisable(false);
         startSpinner.setDisable(false);
         endSpinner.setDisable(false);
+        directionPicker.setDisable(false);
+        directionPicker.getItems().removeAll(directionPicker.getItems());
+        directionPicker.getItems().addAll("East", "West");
+        directionLabel.setDisable(false);
         
         // set up option one button as selected choice
         choice = 1;
@@ -148,6 +154,10 @@ public class PhotoGlitcherController implements Initializable {
         targetRangeLabel.setDisable(false);
         startSpinner.setDisable(false);
         endSpinner.setDisable(false);
+        directionPicker.setDisable(false);
+        directionPicker.getItems().removeAll(directionPicker.getItems());
+        directionPicker.getItems().addAll("North", "South");
+        directionLabel.setDisable(false);
         
         // set up option two button as selected choice
         choice = 2;
@@ -159,13 +169,18 @@ public class PhotoGlitcherController implements Initializable {
     private void performOptionThreeClickedAction(ActionEvent e){
         // adjust settings for option three
         clearButtonBorders();
-        glitchAmountLabel.setDisable(false);
-        slider.setDisable(false);
-        colorPicker.setDisable(true);
-        colorPickerLabel.setDisable(true);
-        targetRangeLabel.setDisable(true);
-        startSpinner.setDisable(true);
-        endSpinner.setDisable(true);
+        glitchAmountLabel.setDisable(true);
+        slider.setDisable(true);
+        colorPicker.setDisable(false);
+        colorPickerLabel.setDisable(false);
+        targetRangeLabel.setDisable(false);
+        startSpinner.setDisable(false);
+        endSpinner.setDisable(false);
+        directionPicker.setDisable(false);
+        directionPicker.getItems().removeAll(directionPicker.getItems());
+        directionPicker.getItems().addAll("Northeast", "Northwest", "Southeast", 
+                "Southwest");
+        directionLabel.setDisable(false);
         
         // set up option three as selected choice
         choice = 3;
@@ -175,6 +190,18 @@ public class PhotoGlitcherController implements Initializable {
     
     @FXML
     private void performOptionFourClickedAction(ActionEvent e){
+        // adjust settings for option four
+        clearButtonBorders();
+        glitchAmountLabel.setDisable(false);
+        slider.setDisable(false);
+        colorPicker.setDisable(true);
+        colorPickerLabel.setDisable(true);
+        targetRangeLabel.setDisable(true);
+        startSpinner.setDisable(true);
+        endSpinner.setDisable(true);
+        directionPicker.setDisable(true);
+        directionLabel.setDisable(true);
+        
         // set up option four as selected choice
         clearButtonBorders();
         choice = 4;
@@ -190,18 +217,30 @@ public class PhotoGlitcherController implements Initializable {
         fileSaver.setTitle("Save Image");
         fileSaver.setInitialDirectory(new File(System.getProperty("user.home")));
         File saveLocation = fileSaver.showSaveDialog(stage);
-        saveFile(saveLocation.getAbsolutePath(), bufferedImg);
+        if (saveLocation != null){
+            saveFile(saveLocation.getAbsolutePath(), bufferedImg);
+        }
     }
     
     @FXML
     private void performGlitchButtonAction(ActionEvent e){
-        if (colorPicker.getValue() == null && (choice == 1 || choice == 2)){
+        if (colorPicker.getValue() == null && (choice == 1 || choice == 2 ||
+                choice == 3)){
             // display alert dialog if the color picker has no value
             Alert confirmDialog;
             confirmDialog = new Alert(AlertType.CONFIRMATION);
             confirmDialog.setTitle("Empty Field Error");
             confirmDialog.setHeaderText("Error");
             confirmDialog.setContentText("You must select a Target RGB.");
+            confirmDialog.showAndWait();
+        }
+        else if (directionPicker.getValue() == null && choice != 4){
+             // display alert dialog if the direction picker has no value
+            Alert confirmDialog;
+            confirmDialog = new Alert(AlertType.CONFIRMATION);
+            confirmDialog.setTitle("Empty Field Error");
+            confirmDialog.setHeaderText("Error");
+            confirmDialog.setContentText("You must select a Target Direction.");
             confirmDialog.showAndWait();
         }
         else {
@@ -211,8 +250,10 @@ public class PhotoGlitcherController implements Initializable {
                 case 1:
                 {
                     PixelSort hps = new PixelSort(bufferedImg);
-                    hps.setRange((int)startSpinner.getValue(), (int)endSpinner.getValue());
+                    hps.setRange((int)startSpinner.getValue(), 
+                            (int)endSpinner.getValue());
                     hps.setTargetRGB(colorPicker.getValue().toString());
+                    hps.setTargetDirection(directionPicker.getValue().toString());
                     bufferedImg = hps.horizontalPixelSort();
                     images.add(bufferedImg);
                     index++;
@@ -225,6 +266,7 @@ public class PhotoGlitcherController implements Initializable {
                     PixelSort vps = new PixelSort(bufferedImg);
                     vps.setRange((int)startSpinner.getValue(), (int)endSpinner.getValue());
                     vps.setTargetRGB(colorPicker.getValue().toString());
+                    vps.setTargetDirection(directionPicker.getValue().toString());
                     bufferedImg = vps.verticalPixelSort();
                     images.add(bufferedImg);
                     index++;
@@ -233,8 +275,11 @@ public class PhotoGlitcherController implements Initializable {
                 }
                 case 3:
                 {
-                    BoxedPixelSort hps = new BoxedPixelSort(bufferedImg, slider.getValue());
-                    bufferedImg = hps.glitchPhoto();
+                    PixelSort wps = new PixelSort(bufferedImg);
+                    wps.setRange((int)startSpinner.getValue(), (int)endSpinner.getValue());
+                    wps.setTargetRGB(colorPicker.getValue().toString());
+                    wps.setTargetDirection(directionPicker.getValue().toString());
+                    bufferedImg = wps.diagonalPixelSort();
                     images.add(bufferedImg);
                     index++;
                     imgPane.setImage(SwingFXUtils.toFXImage(bufferedImg, null));
@@ -242,6 +287,11 @@ public class PhotoGlitcherController implements Initializable {
                 }
                 case 4:
                 {
+                    BoxedPixelSort hps = new BoxedPixelSort(bufferedImg, slider.getValue());
+                    bufferedImg = hps.glitchPhoto();
+                    images.add(bufferedImg);
+                    index++;
+                    imgPane.setImage(SwingFXUtils.toFXImage(bufferedImg, null));
                     break;
                 }
                 default:
@@ -263,6 +313,9 @@ public class PhotoGlitcherController implements Initializable {
             images.remove(images.size() - 1);
         }
     }
+    
+    @FXML
+    private void performRedoButtonAction(ActionEvent e){}
     
     @FXML
     private void performImgPaneDragDroppedAction(ActionEvent e){}
@@ -308,14 +361,24 @@ public class PhotoGlitcherController implements Initializable {
         
         // try to load the chosen photo
         File imageFile = fileChooser.showOpenDialog(stage);
-        try {
-            img1 = new Image(new FileInputStream(imageFile));
-            bufferedImg = ImageIO.read(imageFile);
-        } catch (IOException ex) {}
         if (imageFile != null){
-            images.clear();
+            try {
+                img1 = new Image(new FileInputStream(imageFile));
+                bufferedImg = ImageIO.read(imageFile);
+                images.clear();
+                setImage(img1, bufferedImg);
+            } catch (IOException ex) {}
         }
-        setImage(img1, bufferedImg);
+    }
+    
+    @FXML
+    private void performMnuUndoAction(ActionEvent e){
+        undoButton.fire();
+    }
+    
+    @FXML
+    private void performMnuGlitchAction(ActionEvent e){
+        glitchButton.fire();
     }
     
     public void setImage(Image img, BufferedImage bi){
@@ -355,34 +418,43 @@ public class PhotoGlitcherController implements Initializable {
         }
     }
     
+    public void setupMenuItems(){
+        Image saveImg = new Image(getClass().getResource("photos/save.png").toString());
+        ImageView saveImgView = new ImageView(saveImg);
+        mnuSave.setGraphic(saveImgView);
+        Image newImg = new Image(getClass().getResource("photos/new.png").toString());
+        ImageView newImgView = new ImageView(newImg);
+        mnuNew.setGraphic(newImgView);
+        Image undoImg = new Image(getClass().getResource("photos/undo.png").toString());
+        ImageView undoImgView = new ImageView(undoImg);
+        mnuUndo.setGraphic(undoImgView);
+    }
+    
     public void setupButtons(){
         // set content for button options
         Image optionOne = new Image(getClass().getResource("photos/bird_horiz.jpg").toString());
         ImageView optOneImgView = new ImageView(optionOne);
-        optOneImgView.preserveRatioProperty();
-        optOneImgView.fitHeightProperty();
-        optOneImgView.fitWidthProperty();
         optionOneButton.setContentDisplay(ContentDisplay.BOTTOM);
         optionOneButton.setText("Horizontal Leak");
         optionOneButton.setGraphic(optOneImgView);
         
         Image optionTwo = new Image(getClass().getResource("photos/bird_vert.jpg").toString());
         ImageView optTwoImgView = new ImageView(optionTwo);
-        optTwoImgView.preserveRatioProperty();
-        optTwoImgView.fitHeightProperty();
-        optTwoImgView.fitWidthProperty();
         optionTwoButton.setContentDisplay(ContentDisplay.BOTTOM);
         optionTwoButton.setText("Vertical Leak");
         optionTwoButton.setGraphic(optTwoImgView);
         
-        Image optionThree = new Image(getClass().getResource("photos/bird_boxed.jpg").toString());
+        Image optionThree = new Image(getClass().getResource("photos/bird_diag.jpg").toString());
         ImageView optThreeImgView = new ImageView(optionThree);
-        optThreeImgView.preserveRatioProperty();
-        optThreeImgView.fitHeightProperty();
-        optThreeImgView.fitWidthProperty();
         optionThreeButton.setContentDisplay(ContentDisplay.BOTTOM);
-        optionThreeButton.setText("Boxed Random");
+        optionThreeButton.setText("Diagonal Leak");
         optionThreeButton.setGraphic(optThreeImgView);
+        
+        Image optionFour = new Image(getClass().getResource("photos/bird_boxed.jpg").toString());
+        ImageView optFourImgView = new ImageView(optionFour);
+        optionFourButton.setContentDisplay(ContentDisplay.BOTTOM);
+        optionFourButton.setText("Boxed Random");
+        optionFourButton.setGraphic(optFourImgView);
     }
     
     private void saveFile(String location, BufferedImage imageFile){

@@ -16,7 +16,7 @@ public class PixelSort {
     private final BufferedImage img;
     private final int width;
     private final int height;
-    private String targetRGB;
+    private String targetRGB, targetDirection;
     private int start, end;
     
     public PixelSort(BufferedImage image){
@@ -29,6 +29,10 @@ public class PixelSort {
         targetRGB = s;
     }
     
+    public void setTargetDirection(String s){
+        targetDirection = s;
+    }
+    
     public void setRange(int s, int f){
         start = s;
         end = f;
@@ -36,18 +40,40 @@ public class PixelSort {
     
     public BufferedImage horizontalPixelSort() {
         // sort horizontal rows by specifed rgb value and range
+        int theStart, theEnd, iterator;
+        boolean condition;
+        if (targetDirection.equals("East")){
+            theStart = 0;
+            theEnd = width;
+            iterator = 1;
+        }
+        else {
+            theStart = width - 1;
+            theEnd = 0;
+            iterator = -1;
+        }
 	for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+            condition = true;
+            for (int j = theStart; condition; j+=iterator) {
 		try {
                     Color color = new Color(img.getRGB(j,  i));
-                    if (targetRGB.equals("Blue") && color.getBlue() >= start && color.getBlue() <= end) {
-			img.setRGB(j, i, img.getRGB(j - 1, i));
+                    if (targetRGB.equals("Blue") && color.getBlue() >= start && 
+                            color.getBlue() <= end) {
+			img.setRGB(j, i, img.getRGB(j - iterator, i));
                     }
-                    else if (targetRGB.equals("Red") && color.getRed() >= start && color.getRed() <= end) {
-			img.setRGB(j, i, img.getRGB(j - 1, i));
+                    else if (targetRGB.equals("Red") && color.getRed() >= start 
+                            && color.getRed() <= end) {
+			img.setRGB(j, i, img.getRGB(j - iterator, i));
                     }
-                    else if (targetRGB.equals("Green") && color.getGreen() >= start && color.getGreen() <= end) {
-			img.setRGB(j, i, img.getRGB(j - 1, i));
+                    else if (targetRGB.equals("Green") && color.getGreen() >= 
+                            start && color.getGreen() <= end) {
+			img.setRGB(j, i, img.getRGB(j - iterator, i));
+                    }
+                    if (targetDirection.equals("East") && j == width - 1){
+                        condition = false;
+                    }
+                    else if (targetDirection.equals("West") && j == 1){
+                        condition = false;
                     }
 		}
                 catch (Exception e) {}
@@ -58,23 +84,142 @@ public class PixelSort {
     
     public BufferedImage verticalPixelSort() {
         // sort vertical columns by specifed rgb value and range
-	for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-		try {
-                    Color color = new Color(img.getRGB(j,  i));
-                    if (targetRGB.equals("Blue") && color.getBlue() >= start && color.getBlue() <= end) {
-			img.setRGB(j, i, img.getRGB(j, i - 1));
+        if (targetDirection.equals("North")){
+            for (int i = height - 1; i >= 0; i--) {
+                for (int j = 0; j < width; j++) {
+                    try {
+                        Color color = new Color(img.getRGB(j,  i));
+                        if (targetRGB.equals("Blue") && color.getBlue() >= start && 
+                                color.getBlue() <= end) {
+                            img.setRGB(j, i, img.getRGB(j, i + 1));
+                        }
+                        else if (targetRGB.equals("Red") && color.getRed() >= start 
+                                && color.getRed() <= end) {
+                            img.setRGB(j, i, img.getRGB(j, i + 1));
+                        }
+                        else if (targetRGB.equals("Green") && color.getGreen() >= 
+                                start && color.getGreen() <= end) {
+                            img.setRGB(j, i, img.getRGB(j, i + 1));
+                        }
                     }
-                    else if (targetRGB.equals("Red") && color.getRed() >= start && color.getRed() <= end) {
-			img.setRGB(j, i, img.getRGB(j, i - 1));
-                    }
-                    else if (targetRGB.equals("Green") && color.getGreen() >= start && color.getGreen() <= end) {
-			img.setRGB(j, i, img.getRGB(j, i - 1));
-                    }
-		}
-                catch (Exception e) {}
+                    catch (Exception e) {}
+                }
             }
-	}
+        }
+        else {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    try {
+                        Color color = new Color(img.getRGB(j,  i));
+                        if (targetRGB.equals("Blue") && color.getBlue() >= start && 
+                                color.getBlue() <= end) {
+                            img.setRGB(j, i, img.getRGB(j, i - 1));
+                        }
+                        else if (targetRGB.equals("Red") && color.getRed() >= start 
+                                && color.getRed() <= end) {
+                            img.setRGB(j, i, img.getRGB(j, i - 1));
+                        }
+                        else if (targetRGB.equals("Green") && color.getGreen() >= 
+                                start && color.getGreen() <= end) {
+                            img.setRGB(j, i, img.getRGB(j, i - 1));
+                        }
+                    }
+                    catch (Exception e) {}
+                }
+            }
+        }
+	return img;
+    }
+    
+    public BufferedImage diagonalPixelSort(){
+        switch (targetDirection) {
+            case "Northeast":
+                for (int i = height - 1; i >= 0; i--) {
+                    for (int j = 0; j < width; j++) {
+                        try {
+                            Color color = new Color(img.getRGB(j,  i));
+                            if (targetRGB.equals("Blue") && color.getBlue() >= start &&
+                                    color.getBlue() <= end) {
+                                img.setRGB(j, i, img.getRGB(j - 1, i+1));
+                            }
+                            else if (targetRGB.equals("Red") && color.getRed() >= start
+                                    && color.getRed() <= end) {
+                                img.setRGB(j, i, img.getRGB(j - 1, i+1));
+                            }
+                            else if (targetRGB.equals("Green") && color.getGreen() >=
+                                    start && color.getGreen() <= end) {
+                                img.setRGB(j, i, img.getRGB(j - 1, i+1));
+                            }
+                        }
+                        catch (Exception e) {}
+                    }
+                }   break;
+            case "Southeast":
+                for (int i = 0; i < height; i++) {
+                    for (int j = 0; j < width; j++) {
+                        try {
+                            Color color = new Color(img.getRGB(j,  i));
+                            if (targetRGB.equals("Blue") && color.getBlue() >= start &&
+                                    color.getBlue() <= end) {
+                                img.setRGB(j, i, img.getRGB(j - 1, i-1));
+                            }
+                            else if (targetRGB.equals("Red") && color.getRed() >= start
+                                    && color.getRed() <= end) {
+                                img.setRGB(j, i, img.getRGB(j - 1, i-1));
+                            }
+                            else if (targetRGB.equals("Green") && color.getGreen() >=
+                                    start && color.getGreen() <= end) {
+                                img.setRGB(j, i, img.getRGB(j - 1, i-1));
+                            }
+                        }
+                        catch (Exception e) {}
+                    }
+                }   break;
+            case "Northwest":
+                for (int i = height - 1; i >= 0; i--) {
+                    for (int j = width - 1; j >= 0; j--) {
+                        try {
+                            Color color = new Color(img.getRGB(j,  i));
+                            if (targetRGB.equals("Blue") && color.getBlue() >= start &&
+                                    color.getBlue() <= end) {
+                                img.setRGB(j, i, img.getRGB(j + 1, i+1));
+                            }
+                            else if (targetRGB.equals("Red") && color.getRed() >= start
+                                    && color.getRed() <= end) {
+                                img.setRGB(j, i, img.getRGB(j + 1, i+1));
+                            }
+                            else if (targetRGB.equals("Green") && color.getGreen() >=
+                                    start && color.getGreen() <= end) {
+                                img.setRGB(j, i, img.getRGB(j + 1, i+1));
+                            }
+                        }
+                        catch (Exception e) {}
+                    }
+                }   break;
+            case "Southwest":
+                for (int i = 0; i < height; i++) {
+                    for (int j = width - 1; j >= 0; j--) {
+                        try {
+                            Color color = new Color(img.getRGB(j,  i));
+                            if (targetRGB.equals("Blue") && color.getBlue() >= start &&
+                                    color.getBlue() <= end) {
+                                img.setRGB(j, i, img.getRGB(j + 1, i-1));
+                            }
+                            else if (targetRGB.equals("Red") && color.getRed() >= start
+                                    && color.getRed() <= end) {
+                                img.setRGB(j, i, img.getRGB(j + 1, i-1));
+                            }
+                            else if (targetRGB.equals("Green") && color.getGreen() >=
+                                    start && color.getGreen() <= end) {
+                                img.setRGB(j, i, img.getRGB(j + 1, i-1));
+                            }
+                        }
+                        catch (Exception e) {}
+                    }
+                }   break;
+            default:
+                break;
+        }
 	return img;
     }
 }

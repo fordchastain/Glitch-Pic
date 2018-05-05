@@ -12,6 +12,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -20,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="glitchpicprototype.PhotoGlitcherController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="glitchpicprototype.PhotoGlitcherController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -34,7 +35,9 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="mnuGlitch" mnemonicParsing="false" onAction="#performMnuGlitchAction" text="Glitch" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="mnuUndo" mnemonicParsing="false" onAction="#performMnuUndoAction" text="Undo" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -143,12 +146,12 @@
             </Label>
             <ComboBox fx:id="colorPicker" prefHeight="32.0" prefWidth="164.0">
                <VBox.margin>
-                  <Insets bottom="15.0" left="15.0" right="15.0" />
+                  <Insets left="15.0" right="15.0" />
                </VBox.margin>
             </ComboBox>
             <Label fx:id="targetRangeLabel" alignment="CENTER" prefHeight="30.0" prefWidth="164.0" text="Target Range:">
                <VBox.margin>
-                  <Insets left="15.0" right="15.0" />
+                  <Insets left="15.0" right="15.0" top="5.0" />
                </VBox.margin>
                <font>
                   <Font name="Courier New Bold" size="14.0" />
@@ -168,10 +171,26 @@
                   </Spinner>
                </children>
             </FlowPane>
-            <Separator prefWidth="200.0" />
+            <Label fx:id="directionLabel" alignment="CENTER" prefHeight="30.0" prefWidth="164.0" text="Direction:">
+               <VBox.margin>
+                  <Insets left="15.0" right="15.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Courier New Bold" size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="directionPicker" prefHeight="32.0" prefWidth="164.0">
+               <VBox.margin>
+                  <Insets left="15.0" right="15.0" />
+               </VBox.margin>
+            </ComboBox>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin></Separator>
             <Label fx:id="glitchAmountLabel" alignment="CENTER" prefHeight="30.0" prefWidth="164.0" text="Glitch Amount: 0%">
                <VBox.margin>
-                  <Insets left="15.0" right="15.0" top="5.0" />
+                  <Insets left="15.0" right="15.0" />
                </VBox.margin>
                <font>
                   <Font name="Courier New Bold" size="14.0" />
@@ -187,36 +206,70 @@
             </Slider>
             <Separator prefWidth="200.0">
                <VBox.margin>
-                  <Insets bottom="30.0" top="15.0" />
+                  <Insets top="25.0" />
                </VBox.margin>
             </Separator>
             <Button fx:id="glitchButton" mnemonicParsing="false" onAction="#performGlitchButtonAction" prefHeight="42.0" prefWidth="164.0" text="Glitch Photo">
                <VBox.margin>
-                  <Insets bottom="15.0" left="15.0" right="15.0" />
+                  <Insets left="15.0" right="15.0" top="10.0" />
                </VBox.margin>
                <font>
                   <Font name="Courier New Bold" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="undoButton" mnemonicParsing="false" onAction="#performUndoButtonAction" prefHeight="42.0" prefWidth="164.0" text="Undo">
-               <font>
-                  <Font name="Courier New Bold" size="14.0" />
-               </font>
-               <VBox.margin>
-                  <Insets left="15.0" right="15.0" top="15.0" />
-               </VBox.margin>
-            </Button>
+            <HBox prefHeight="50.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="undoButton" mnemonicParsing="false" onAction="#performUndoButtonAction" prefHeight="42.0" prefWidth="74.0" text="Undo">
+                     <font>
+                        <Font name="Courier New Bold" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="redoButton" mnemonicParsing="false" onAction="#performRedoButtonAction" prefHeight="42.0" prefWidth="74.0" text="Redo">
+                     <font>
+                        <Font name="Courier New Bold" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </HBox>
          </children>
       </VBox>
    </right>
    <center>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
-            <ImageView fx:id="imgPane" fitHeight="400.0" fitWidth="640.0" onDragDropped="#performImgPaneDragDroppedAction" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+            <ImageView fx:id="imgPane" fitHeight="360.0" fitWidth="640.0" onDragDropped="#performImgPaneDragDroppedAction" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
          </center>
          <right>
-            <Separator orientation="VERTICAL" prefHeight="200.0" BorderPane.alignment="CENTER" />
+            <Separator orientation="VERTICAL" prefHeight="200.0" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets bottom="5.0" left="15.0" />
+               </BorderPane.margin>
+               <padding>
+                  <Insets bottom="5.0" left="15.0" />
+               </padding></Separator>
          </right>
+         <top>
+            <ToolBar prefHeight="40.0" prefWidth="665.0" BorderPane.alignment="CENTER">
+              <items>
+                <Button mnemonicParsing="false" text="Button" />
+              </items>
+               <BorderPane.margin>
+                  <Insets right="5.0" />
+               </BorderPane.margin>
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+            </ToolBar>
+         </top>
       </BorderPane>
    </center>
 </BorderPane>

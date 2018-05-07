@@ -14,6 +14,7 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.Reflection?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -21,16 +22,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="glitchpicprototype.PhotoGlitcherController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="glitchpicprototype.PhotoGlitcherController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem fx:id="mnuNew" mnemonicParsing="false" onAction="#performMnuNewAction" text="New..." />
-                  <MenuItem fx:id="mnuSave" mnemonicParsing="false" onAction="#performMnuSaveAction" text="Save..." />
+                  <MenuItem fx:id="mnuOpen" mnemonicParsing="false" onAction="#performMnuNewAction" text="Open" />
+                  <MenuItem fx:id="mnuSave" mnemonicParsing="false" onAction="#performMnuSaveAction" text="Save" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem fx:id="mnuClose" mnemonicParsing="false" onAction="#performMnuCloseAction" text="Close..." />
+              <MenuItem fx:id="mnuExit" mnemonicParsing="false" onAction="#performMnuCloseAction" text="Exit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -38,11 +39,7 @@
               <MenuItem fx:id="mnuGlitch" mnemonicParsing="false" onAction="#performMnuGlitchAction" text="Glitch" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="mnuUndo" mnemonicParsing="false" onAction="#performMnuUndoAction" text="Undo" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+                  <MenuItem fx:id="mnuUndo1" mnemonicParsing="false" onAction="#performRedoButtonAction" text="Redo" />
             </items>
           </Menu>
         </menus>
@@ -259,15 +256,51 @@
          </right>
          <top>
             <ToolBar prefHeight="40.0" prefWidth="665.0" BorderPane.alignment="CENTER">
-              <items>
-                <Button mnemonicParsing="false" text="Button" />
-              </items>
                <BorderPane.margin>
                   <Insets right="5.0" />
                </BorderPane.margin>
                <padding>
                   <Insets right="5.0" />
                </padding>
+               <items>
+                  <Button mnemonicParsing="false" onAction="#performMnuSaveAction">
+                     <graphic>
+                        <ImageView accessibleText="Save" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@photos/save.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button layoutX="10.0" layoutY="17.0" mnemonicParsing="false" onAction="#performMnuNewAction">
+                     <graphic>
+                        <ImageView accessibleText="Open" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@photos/Folder-Open-icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="3.0" />
+                  <Button accessibleText="Undo" layoutX="57.0" layoutY="13.0" mnemonicParsing="false" onAction="#performMnuUndoAction">
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@photos/undo.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button accessibleText="Redo" layoutX="114.0" layoutY="13.0" mnemonicParsing="false" onAction="#performRedoButtonAction">
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@photos/Actions-blue-arrow-redo-icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </items>
             </ToolBar>
          </top>
       </BorderPane>

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package glitchpicprototype;
 
 import java.awt.Graphics;
@@ -50,7 +46,8 @@ import javax.imageio.ImageIO;
 /**
  * FXML Controller class
  *
- * @author Stanford Chastain
+ * @author Stanford Chastain, Mason Dructor
+ *
  */
 public class PhotoGlitcherController implements Initializable {
 
@@ -75,7 +72,7 @@ public class PhotoGlitcherController implements Initializable {
             directionLabel;
     
     @FXML
-    private MenuItem mnuClose, mnuNew, mnuSave, mnuGlitch, mnuUndo;
+    private MenuItem mnuExit, mnuOpen, mnuSave, mnuGlitch, mnuUndo, mnuRedo;
     
     private Image img1, original;
     private Color c;
@@ -83,12 +80,7 @@ public class PhotoGlitcherController implements Initializable {
     private ArrayList<BufferedImage> images;
     private int choice, index;
     private static final double INIT_VALUE = 50;
-    
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // set up nodes
@@ -115,7 +107,6 @@ public class PhotoGlitcherController implements Initializable {
         endSpinner.setValueFactory(endValueFactory);
         
         setupButtons();
-        setupMenuItems();
         
         // create new ArrayList for storing all images
         images = new ArrayList<>();
@@ -421,18 +412,7 @@ public class PhotoGlitcherController implements Initializable {
             imgPane.setY((imgPane.getFitHeight() - h) / 2);
         }
     }
-    
-    public void setupMenuItems(){
-        Image saveImg = new Image(getClass().getResource("photos/save.png").toString());
-        ImageView saveImgView = new ImageView(saveImg);
-        mnuSave.setGraphic(saveImgView);
-        Image newImg = new Image(getClass().getResource("photos/new.png").toString());
-        ImageView newImgView = new ImageView(newImg);
-        mnuNew.setGraphic(newImgView);
-        Image undoImg = new Image(getClass().getResource("photos/undo.png").toString());
-        ImageView undoImgView = new ImageView(undoImg);
-        mnuUndo.setGraphic(undoImgView);
-    }
+
     
     public void setupButtons(){
         // set content for button options

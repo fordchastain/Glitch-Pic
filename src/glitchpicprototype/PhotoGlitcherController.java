@@ -309,13 +309,17 @@ public class PhotoGlitcherController implements Initializable {
         bufferedImg = images.get(index);
         img1 = SwingFXUtils.toFXImage(images.get(index), null);
         imgPane.setImage(img1);
-        if (images.size() >= 2){
-            images.remove(images.size() - 1);
-        }
     }
     
     @FXML
-    private void performRedoButtonAction(ActionEvent e){}
+    private void performRedoButtonAction(ActionEvent e){
+        if (index + 1 < images.size()) {
+            index++;
+            bufferedImg = images.get(index);
+            img1 = SwingFXUtils.toFXImage(images.get(index), null);
+            imgPane.setImage(img1);
+        }
+    }
     
     @FXML
     private void performImgPaneDragDroppedAction(ActionEvent e){}

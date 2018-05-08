@@ -24,7 +24,7 @@ public class GlitchPicPrototype extends Application {
         
         Scene scene = new Scene(root, 700, 500);
         
-        stage.setTitle("Glitch Pic Prototype");
+        stage.setTitle("Glitch Pic");
         stage.setScene(scene);
         stage.setMinWidth(550);
         stage.setMinHeight(400);

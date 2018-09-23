@@ -31,6 +31,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Border;
@@ -46,7 +47,7 @@ import javax.imageio.ImageIO;
 /**
  * FXML Controller class
  *
- * @author Stanford Chastain, Mason Dructor
+ * @author Stanford Chastain
  *
  */
 public class PhotoGlitcherController implements Initializable {
@@ -63,6 +64,9 @@ public class PhotoGlitcherController implements Initializable {
     
     @FXML
     private ComboBox colorPicker, directionPicker;
+    
+    @FXML
+    private ToolBar toolBar;
     
     @FXML
     private Slider slider;

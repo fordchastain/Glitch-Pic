@@ -12,13 +12,14 @@ import java.util.Random;
  *
  * @author Stanford Chastain
  */
-public class BoxedPixelSort {
+public class BoxedPixelSort extends PixelSort {
     private final BufferedImage img1;
     private final int width;
     private final int height;
     private final double glitchAmount;
     
     public BoxedPixelSort(BufferedImage image, double percentage){
+        super(image);
         img1 = image;
         width = image.getWidth();
         height = image.getHeight();

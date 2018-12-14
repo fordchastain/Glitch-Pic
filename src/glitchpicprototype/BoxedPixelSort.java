@@ -13,16 +13,10 @@ import java.util.Random;
  * @author Stanford Chastain
  */
 public class BoxedPixelSort extends PixelSort {
-    private final BufferedImage img1;
-    private final int width;
-    private final int height;
     private final double glitchAmount;
     
     public BoxedPixelSort(BufferedImage image, double percentage){
         super(image);
-        img1 = image;
-        width = image.getWidth();
-        height = image.getHeight();
         glitchAmount = percentage / 100;
     }
     
@@ -37,14 +31,14 @@ public class BoxedPixelSort extends PixelSort {
         // sort pixel boxes a number of times determined by glitchAmount
 	while (vertCount < (int)(90 * glitchAmount)) {
             try {
-		randWid = rand.nextInt(width);
-		randWid2 = rand.nextInt(width - randWid);
-		randHeight = rand.nextInt(height);
-		randHeight2 = rand.nextInt(height - randHeight);
+		randWid = rand.nextInt(getWidth());
+		randWid2 = rand.nextInt(getWidth() - randWid);
+		randHeight = rand.nextInt(getHeight());
+		randHeight2 = rand.nextInt(getHeight() - randHeight);
 		for (int i = randHeight; i < randHeight2; i++) {
                     for (int j = randWid; j < randWid2; j++) {
-			if (height - i > height / 30) {
-                            img1.setRGB(j, i, img1.getRGB(j, i + height / 30));
+			if (getHeight() - i > getHeight() / 30) {
+                            getImage().setRGB(j, i, getImage().getRGB(j, i+getHeight()/30));
 			}
                     }
 		}
@@ -54,19 +48,19 @@ public class BoxedPixelSort extends PixelSort {
 	}
 	while (horizCount < (int)(30 * glitchAmount)) {
             try {
-		randWid = rand.nextInt(width);
-		randWid2 = rand.nextInt(width - randWid);
-		randHeight = rand.nextInt(height);
-		randHeight2 = rand.nextInt(height - randHeight);
+		randWid = rand.nextInt(getWidth());
+		randWid2 = rand.nextInt(getWidth() - randWid);
+		randHeight = rand.nextInt(getHeight());
+		randHeight2 = rand.nextInt(getHeight() - randHeight);
 		for (int i = randHeight; i < randHeight2; i++) {
                     for (int j = randWid; j < randWid2; j++) {
-			img1.setRGB(i, j, img1.getRGB(i, j + width / 30) + 900);
+			getImage().setRGB(i, j, getImage().getRGB(i, j+getWidth()/30)+900);
                     }
 		}
 		horizCount++;
             }
             catch (Exception e) {}
 	}
-        return img1;
+        return getImage();
     }
 }

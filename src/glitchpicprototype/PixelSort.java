@@ -38,6 +38,18 @@ public class PixelSort {
         end = f;
     }
     
+    public int getWidth() {
+        return width;
+    }
+    
+    public int getHeight() {
+        return height;
+    }
+    
+    public BufferedImage getImage() {
+        return img;
+    }
+    
     public BufferedImage horizontalPixelSort() {
         // sort horizontal rows by specifed rgb value and range
         int theStart, theEnd, iterator;
@@ -134,92 +146,112 @@ public class PixelSort {
     public BufferedImage diagonalPixelSort(){
         switch (targetDirection) {
             case "Northeast":
-                for (int i = height - 1; i >= 0; i--) {
-                    for (int j = 0; j < width; j++) {
-                        try {
-                            Color color = new Color(img.getRGB(j,  i));
-                            if (targetRGB.equals("Blue") && color.getBlue() >= start &&
-                                    color.getBlue() <= end) {
-                                img.setRGB(j, i, img.getRGB(j - 1, i+1));
-                            }
-                            else if (targetRGB.equals("Red") && color.getRed() >= start
-                                    && color.getRed() <= end) {
-                                img.setRGB(j, i, img.getRGB(j - 1, i+1));
-                            }
-                            else if (targetRGB.equals("Green") && color.getGreen() >=
-                                    start && color.getGreen() <= end) {
-                                img.setRGB(j, i, img.getRGB(j - 1, i+1));
-                            }
-                        }
-                        catch (Exception e) {}
-                    }
-                }   break;
+                glitchNortheast();
+                break;
             case "Southeast":
-                for (int i = 0; i < height; i++) {
-                    for (int j = 0; j < width; j++) {
-                        try {
-                            Color color = new Color(img.getRGB(j,  i));
-                            if (targetRGB.equals("Blue") && color.getBlue() >= start &&
-                                    color.getBlue() <= end) {
-                                img.setRGB(j, i, img.getRGB(j - 1, i-1));
-                            }
-                            else if (targetRGB.equals("Red") && color.getRed() >= start
-                                    && color.getRed() <= end) {
-                                img.setRGB(j, i, img.getRGB(j - 1, i-1));
-                            }
-                            else if (targetRGB.equals("Green") && color.getGreen() >=
-                                    start && color.getGreen() <= end) {
-                                img.setRGB(j, i, img.getRGB(j - 1, i-1));
-                            }
-                        }
-                        catch (Exception e) {}
-                    }
-                }   break;
+                glitchSoutheast();
+                break;
             case "Northwest":
-                for (int i = height - 1; i >= 0; i--) {
-                    for (int j = width - 1; j >= 0; j--) {
-                        try {
-                            Color color = new Color(img.getRGB(j,  i));
-                            if (targetRGB.equals("Blue") && color.getBlue() >= start &&
-                                    color.getBlue() <= end) {
-                                img.setRGB(j, i, img.getRGB(j + 1, i+1));
-                            }
-                            else if (targetRGB.equals("Red") && color.getRed() >= start
-                                    && color.getRed() <= end) {
-                                img.setRGB(j, i, img.getRGB(j + 1, i+1));
-                            }
-                            else if (targetRGB.equals("Green") && color.getGreen() >=
-                                    start && color.getGreen() <= end) {
-                                img.setRGB(j, i, img.getRGB(j + 1, i+1));
-                            }
-                        }
-                        catch (Exception e) {}
-                    }
-                }   break;
+                glitchNorthwest();
+                break;
             case "Southwest":
-                for (int i = 0; i < height; i++) {
-                    for (int j = width - 1; j >= 0; j--) {
-                        try {
-                            Color color = new Color(img.getRGB(j,  i));
-                            if (targetRGB.equals("Blue") && color.getBlue() >= start &&
-                                    color.getBlue() <= end) {
-                                img.setRGB(j, i, img.getRGB(j + 1, i-1));
-                            }
-                            else if (targetRGB.equals("Red") && color.getRed() >= start
-                                    && color.getRed() <= end) {
-                                img.setRGB(j, i, img.getRGB(j + 1, i-1));
-                            }
-                            else if (targetRGB.equals("Green") && color.getGreen() >=
-                                    start && color.getGreen() <= end) {
-                                img.setRGB(j, i, img.getRGB(j + 1, i-1));
-                            }
-                        }
-                        catch (Exception e) {}
-                    }
-                }   break;
+                glitchSouthwest();
+                break;
             default:
                 break;
         }
 	return img;
+    }
+    
+    public void glitchNortheast() {
+        for (int i = height - 1; i >= 0; i--) {
+            for (int j = 0; j < width; j++) {
+                try {
+                    Color color = new Color(img.getRGB(j,  i));
+                    if (targetRGB.equals("Blue") && color.getBlue() >= start &&
+                            color.getBlue() <= end) {
+                        img.setRGB(j, i, img.getRGB(j - 1, i+1));
+                    }
+                    else if (targetRGB.equals("Red") && color.getRed() >= start
+                            && color.getRed() <= end) {
+                        img.setRGB(j, i, img.getRGB(j - 1, i+1));
+                    }
+                    else if (targetRGB.equals("Green") && color.getGreen() >=
+                            start && color.getGreen() <= end) {
+                        img.setRGB(j, i, img.getRGB(j - 1, i+1));
+                    }
+                }
+                catch (Exception e) {}
+            }
+        }   
+    }
+    
+    public void glitchNorthwest() {
+        for (int i = height - 1; i >= 0; i--) {
+            for (int j = width - 1; j >= 0; j--) {
+                try {
+                    Color color = new Color(img.getRGB(j,  i));
+                    if (targetRGB.equals("Blue") && color.getBlue() >= start &&
+                            color.getBlue() <= end) {
+                        img.setRGB(j, i, img.getRGB(j + 1, i+1));
+                    }
+                    else if (targetRGB.equals("Red") && color.getRed() >= start
+                            && color.getRed() <= end) {
+                        img.setRGB(j, i, img.getRGB(j + 1, i+1));
+                    }
+                    else if (targetRGB.equals("Green") && color.getGreen() >=
+                            start && color.getGreen() <= end) {
+                        img.setRGB(j, i, img.getRGB(j + 1, i+1));
+                    }
+                }
+                catch (Exception e) {}
+            }
+        }   
+    }
+    
+    public void glitchSoutheast() {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                try {
+                    Color color = new Color(img.getRGB(j,  i));
+                    if (targetRGB.equals("Blue") && color.getBlue() >= start &&
+                            color.getBlue() <= end) {
+                        img.setRGB(j, i, img.getRGB(j - 1, i-1));
+                    }
+                    else if (targetRGB.equals("Red") && color.getRed() >= start
+                            && color.getRed() <= end) {
+                        img.setRGB(j, i, img.getRGB(j - 1, i-1));
+                    }
+                    else if (targetRGB.equals("Green") && color.getGreen() >=
+                            start && color.getGreen() <= end) {
+                        img.setRGB(j, i, img.getRGB(j - 1, i-1));
+                    }
+                }
+                catch (Exception e) {}
+            }
+        }
+    }
+    
+    public void glitchSouthwest() {
+        for (int i = 0; i < height; i++) {
+            for (int j = width - 1; j >= 0; j--) {
+                try {
+                    Color color = new Color(img.getRGB(j,  i));
+                    if (targetRGB.equals("Blue") && color.getBlue() >= start && 
+                            color.getBlue() <= end) {
+                        img.setRGB(j, i, img.getRGB(j + 1, i-1));
+                    }
+                    else if (targetRGB.equals("Red") && color.getRed() >= start 
+                            && color.getRed() <= end) {
+                        img.setRGB(j, i, img.getRGB(j + 1, i-1));
+                    }
+                    else if (targetRGB.equals("Green") && color.getGreen() >= 
+                            start && color.getGreen() <= end) {
+                        img.setRGB(j, i, img.getRGB(j + 1, i-1));
+                    }
+                }
+                catch (Exception e) {}
+            }
+        }
     }
 }

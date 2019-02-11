@@ -300,10 +300,10 @@ public class PhotoGlitcherController implements Initializable {
         // change image index and display photo
         if (index >= 1){
             index--;
+            bufferedImg = images.get(index);
+            img1 = SwingFXUtils.toFXImage(images.get(index), null);
+            imgPane.setImage(img1);
         }
-        bufferedImg = images.get(index);
-        img1 = SwingFXUtils.toFXImage(images.get(index), null);
-        imgPane.setImage(img1);
     }
     
     @FXML

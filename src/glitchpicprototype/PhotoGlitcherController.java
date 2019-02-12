@@ -1,4 +1,3 @@
-
 package glitchpicprototype;
 
 import java.awt.Graphics;
@@ -44,12 +43,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 
-/**
- * FXML Controller class
- *
- * @author Stanford Chastain
- *
- */
 public class PhotoGlitcherController implements Initializable {
 
     @FXML
@@ -243,52 +236,17 @@ public class PhotoGlitcherController implements Initializable {
             bufferedImg = copyImage(bufferedImg);
             switch (choice) {
                 case 1:
-                {
-                    PixelSort hps = new PixelSort(bufferedImg);
-                    hps.setRange((int)startSpinner.getValue(), 
-                            (int)endSpinner.getValue());
-                    hps.setTargetRGB(colorPicker.getValue().toString());
-                    hps.setTargetDirection(directionPicker.getValue().toString());
-                    bufferedImg = hps.horizontalPixelSort();
-                    images.add(bufferedImg);
-                    index++;
-                    img1 = SwingFXUtils.toFXImage(bufferedImg, null);
-                    imgPane.setImage(img1);
+                    createHorizontalSort();
                     break;
-                }
                 case 2:
-                {
-                    PixelSort vps = new PixelSort(bufferedImg);
-                    vps.setRange((int)startSpinner.getValue(), (int)endSpinner.getValue());
-                    vps.setTargetRGB(colorPicker.getValue().toString());
-                    vps.setTargetDirection(directionPicker.getValue().toString());
-                    bufferedImg = vps.verticalPixelSort();
-                    images.add(bufferedImg);
-                    index++;
-                    imgPane.setImage(SwingFXUtils.toFXImage(bufferedImg, null));
+                    createVerticalSort();
                     break;
-                }
                 case 3:
-                {
-                    PixelSort wps = new PixelSort(bufferedImg);
-                    wps.setRange((int)startSpinner.getValue(), (int)endSpinner.getValue());
-                    wps.setTargetRGB(colorPicker.getValue().toString());
-                    wps.setTargetDirection(directionPicker.getValue().toString());
-                    bufferedImg = wps.diagonalPixelSort();
-                    images.add(bufferedImg);
-                    index++;
-                    imgPane.setImage(SwingFXUtils.toFXImage(bufferedImg, null));
+                    createDiagonalSort();
                     break;
-                }
                 case 4:
-                {
-                    BoxedPixelSort hps = new BoxedPixelSort(bufferedImg, slider.getValue());
-                    bufferedImg = hps.glitchPhoto();
-                    images.add(bufferedImg);
-                    index++;
-                    imgPane.setImage(SwingFXUtils.toFXImage(bufferedImg, null));
+                    createBoxedSort();
                     break;
-                }
                 default:
                     break;
             }
@@ -315,9 +273,6 @@ public class PhotoGlitcherController implements Initializable {
             imgPane.setImage(img1);
         }
     }
-    
-    @FXML
-    private void performImgPaneDragDroppedAction(ActionEvent e){}
     
     @FXML
     private void performMnuCloseAction(ActionEvent e) throws IOException{
@@ -399,17 +354,17 @@ public class PhotoGlitcherController implements Initializable {
     public void centerImage() {
         Image img = imgPane.getImage();
         if (img != null) {
-            double w;
-            double h;
+            double w, h, reducCoeff;
             double ratioX = imgPane.getFitWidth() / img.getWidth();
             double ratioY = imgPane.getFitHeight() / img.getHeight();
-            double reducCoeff;
+
             if(ratioX >= ratioY) {
                 reducCoeff = ratioY;
             } 
             else {
                 reducCoeff = ratioX;
             }
+
             w = img.getWidth() * reducCoeff;
             h = img.getHeight() * reducCoeff;
             imgPane.setX((imgPane.getFitWidth() - w) / 2);
@@ -417,7 +372,49 @@ public class PhotoGlitcherController implements Initializable {
         }
     }
 
-    
+    private void createHorizontalSort() {
+        PixelSort hps = new PixelSort(bufferedImg);
+        hps.setRange((int)startSpinner.getValue(), 
+            (int)endSpinner.getValue());
+        hps.setTargetRGB(colorPicker.getValue().toString());
+        hps.setTargetDirection(directionPicker.getValue().toString());
+        bufferedImg = hps.horizontalPixelSort();
+        images.add(bufferedImg);
+        index++;
+        img1 = SwingFXUtils.toFXImage(bufferedImg, null);
+        imgPane.setImage(img1);
+    }
+
+    private void createVerticalSort() {
+        PixelSort vps = new PixelSort(bufferedImg);
+        vps.setRange((int)startSpinner.getValue(), (int)endSpinner.getValue());
+        vps.setTargetRGB(colorPicker.getValue().toString());
+        vps.setTargetDirection(directionPicker.getValue().toString());
+        bufferedImg = vps.verticalPixelSort();
+        images.add(bufferedImg);
+        index++;
+        imgPane.setImage(SwingFXUtils.toFXImage(bufferedImg, null));
+    }
+
+    private void createDiagonalSort() {
+        PixelSort wps = new PixelSort(bufferedImg);
+        wps.setRange((int)startSpinner.getValue(), (int)endSpinner.getValue());
+        wps.setTargetRGB(colorPicker.getValue().toString());
+        wps.setTargetDirection(directionPicker.getValue().toString());
+        bufferedImg = wps.diagonalPixelSort();
+        images.add(bufferedImg);
+        index++;
+        imgPane.setImage(SwingFXUtils.toFXImage(bufferedImg, null));
+    }
+
+    private void createBoxedSort() {
+        BoxedPixelSort hps = new BoxedPixelSort(bufferedImg, slider.getValue());
+        bufferedImg = hps.glitchPhoto();
+        images.add(bufferedImg);
+        index++;
+        imgPane.setImage(SwingFXUtils.toFXImage(bufferedImg, null));
+    }
+
     public void setupButtons(){
         // set content for button options
         Image optionOne = new Image(getClass().getResource("photos/bird_horiz.jpg").toString());

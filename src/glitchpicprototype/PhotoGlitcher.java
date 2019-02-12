@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package glitchpicprototype;
 
 import java.awt.image.BufferedImage;
@@ -16,10 +11,6 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Stanford Chastain
- */
 public final class PhotoGlitcher {
     private final File imageFile;
     private Image image;

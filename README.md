@@ -1,7 +1,7 @@
 
-# Glitch Pic
-
-## About
+# Glitch Pic 
+![](https://img.shields.io/github/tag-date/fordchastain/Glitch-Pic.svg?label=release&style=flat)
+![](https://img.shields.io/github/license/fordchastain/Glitch-Pic.svg?style=flat)  
 
 Glitch Pic is a photo manipulation desktop app that allows users to easily transform any of their photos into glitch 
 art. Users are able to specify the RGB values and direction or amount of the glitch effect they want applied to their 
@@ -37,4 +37,5 @@ Once the project is built, just run the .jar file in the `dist/` folder.
 
 ## Author
 
-* **Stanford Chastain** 
+- **Stanford Chastain**  
+![](src/glitchpicprototype/photos/ford.jpg)

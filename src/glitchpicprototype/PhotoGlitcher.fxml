@@ -280,7 +280,7 @@
    <center>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
-            <ImageView fx:id="imgPane" fitHeight="360.0" fitWidth="640.0" onDragDropped="#performImgPaneDragDroppedAction" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+            <ImageView fx:id="imgPane" fitHeight="360.0" fitWidth="640.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
          </center>
          <right>
             <Separator orientation="VERTICAL" prefHeight="200.0" BorderPane.alignment="CENTER">
